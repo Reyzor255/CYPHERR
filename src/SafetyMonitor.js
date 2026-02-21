@@ -286,16 +286,7 @@ function SafetyMonitor() {
           )}
         </div>
       )}
-      {debugLogs && debugLogs.length > 0 && (
-        <div style={{marginTop:12}}>
-          <div style={{fontWeight:'bold'}}>Debug Log</div>
-          <div style={{maxHeight:160, overflow:'auto', background:'#111', color:'#0f0', padding:8, borderRadius:4, marginTop:6}}>
-            {debugLogs.map((d) => (
-              <div key={d.id} style={{fontFamily:'monospace', fontSize:12}}>[{d.id}] {new Date(d.ts).toLocaleTimeString()} - {d.msg}</div>
-            ))}
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }
