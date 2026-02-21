@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import './RecordingPage.css';
 
 function RecordingPage({ onBack, detectedWord }) {
   const [isRecording, setIsRecording] = useState(false);
@@ -94,58 +95,101 @@ function RecordingPage({ onBack, detectedWord }) {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <button onClick={onBack} style={{ padding: '10px 20px', fontSize: '16px', marginBottom: '20px' }}>
-        Back to Monitor
-      </button>
-      
-      <div style={{ padding: '20px', backgroundColor: '#ffebee', borderRadius: '10px', marginBottom: '20px' }}>
-        <h2 style={{ margin: '0 0 10px 0', color: '#c62828' }}>Emergency Recording Active</h2>
-        <p style={{ margin: 0 }}>Detected word: <strong>{detectedWord}</strong></p>
-        
-        <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '5px', borderLeft: '4px solid #ffc107' }}>
-          <div style={{ marginBottom: '8px', color: '#856404' }}>
-            <strong>✓ Emergency Contacts Alerted</strong>
-            <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>All configured emergency contacts have been notified of the threat detection.</p>
-          </div>
-          <div style={{ color: '#856404' }}>
-            <strong>✓ Police Dispatched</strong>
-            <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>Local authorities have been notified and emergency services are being dispatched to your location.</p>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '15px' }}>
-          {isRecording ? (
-            <button onClick={stopRecording} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#d32f2f', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-              Stop Recording
-            </button>
-          ) : (
-            <button onClick={startRecording} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#4caf50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-              Start Recording
-            </button>
-          )}
-        </div>
+    <div className="recording-container">
+      <div className="recording-header">
+        <button onClick={onBack} className="btn btn-secondary back-btn">
+          ← Back to Monitor
+        </button>
       </div>
 
-      <h3>Saved Recordings ({recordings.length})</h3>
-      <div>
-        {recordings.map((rec) => (
-          <div key={rec.timestamp} style={{ padding: '15px', border: '1px solid #ddd', borderRadius: '5px', marginBottom: '10px', backgroundColor: '#f9f9f9' }}>
-            <div><strong>Time:</strong> {new Date(rec.timestamp).toLocaleString()}</div>
-            <div><strong>Detected Word:</strong> {rec.detectedWord}</div>
-            <div style={{ marginTop: '10px' }}>
-              <button onClick={() => playRecording(rec.audio)} style={{ padding: '8px 15px', marginRight: '10px', fontSize: '14px', backgroundColor: '#2196f3', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                Play
-              </button>
-              <button onClick={() => deleteRecording(rec.timestamp)} style={{ padding: '8px 15px', fontSize: '14px', backgroundColor: '#f44336', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                Delete
-              </button>
+      <div className="recording-main">
+        {/* Emergency Alert Card */}
+        <div className="alert-card alert-emergency">
+          <div className="alert-header">
+            <div className="alert-icon">⚠</div>
+            <div>
+              <h2>Emergency Recording Active</h2>
+              <p className="detected-word">Detected threat: <strong>{detectedWord}</strong></p>
             </div>
           </div>
-        ))}
-        {recordings.length === 0 && (
-          <p style={{ color: '#666' }}>No recordings yet</p>
-        )}
+        </div>
+
+        {/* Confirmation Card */}
+        <div className="confirmation-card">
+          <div className="confirmation-item confirmed">
+            <div className="confirmation-icon">✓</div>
+            <div className="confirmation-content">
+              <h3>Emergency Contacts Alerted</h3>
+              <p>All configured emergency contacts have been notified of the threat detection and your location.</p>
+            </div>
+          </div>
+          <div className="confirmation-item confirmed">
+            <div className="confirmation-icon">✓</div>
+            <div className="confirmation-content">
+              <h3>Police Dispatched</h3>
+              <p>Local authorities have been notified and emergency services are being dispatched to your location with priority response.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Recording Control Card */}
+        <div className="card recording-card">
+          <h3 className="card-title">Emergency Recording</h3>
+          <div className="recording-status">
+            <div className="recording-indicator">
+              {isRecording && <span className="recording-pulse"></span>}
+              <span className="recording-text">
+                {isRecording ? 'Recording in progress...' : 'Recording stopped'}
+              </span>
+            </div>
+          </div>
+          <div className="recording-actions">
+            {isRecording ? (
+              <button onClick={stopRecording} className="btn btn-danger">
+                Stop Recording
+              </button>
+            ) : (
+              <button onClick={startRecording} className="btn btn-success">
+                Resume Recording
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Saved Recordings Card */}
+        <div className="card recordings-list-card">
+          <h3 className="card-title">Evidence Log ({recordings.length})</h3>
+          <div className="recordings-list">
+            {recordings.length > 0 ? (
+              recordings.map((rec) => (
+                <div key={rec.timestamp} className="recording-item">
+                  <div className="recording-meta">
+                    <div className="meta-time">
+                      <span className="meta-label">Recorded</span>
+                      <span className="meta-value">{new Date(rec.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div className="meta-word">
+                      <span className="meta-label">Trigger</span>
+                      <span className="meta-value">{rec.detectedWord}</span>
+                    </div>
+                  </div>
+                  <div className="recording-item-actions">
+                    <button onClick={() => playRecording(rec.audio)} className="btn btn-sm btn-secondary">
+                      ▶ Play
+                    </button>
+                    <button onClick={() => deleteRecording(rec.timestamp)} className="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="empty-state">
+                <p>No recordings saved yet</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import RecordingPage from './RecordingPage';
+import './SafetyMonitor.css';
 
 function SafetyMonitor() {
   const [keyword, setKeyword] = useState('');
@@ -210,83 +211,113 @@ function SafetyMonitor() {
   }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <input
-        type="text"
-        placeholder="Set Keyword"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        style={{ padding: '10px', fontSize: '16px', marginRight: '10px' }}
-      />
-      <button onClick={toggleListening} style={{ padding: '10px 20px', fontSize: '16px' }}>
-        {isListening ? 'Stop Listening' : 'Start Listening'}
-      </button>
-      
-      <div style={{marginTop:20}}>
-        <div style={{fontWeight:'bold', marginBottom:8}}>Emergency Contacts:</div>
-        {contacts.map((contact, index) => (
-          <input
-            key={index}
-            type="text"
-            placeholder={`Contact ${index + 1}`}
-            value={contact}
-            onChange={(e) => {
-              const newContacts = [...contacts];
-              newContacts[index] = e.target.value;
-              setContacts(newContacts);
-            }}
-            style={{ padding: '8px', fontSize: '14px', marginRight: '10px', marginBottom: '8px', display: 'block' }}
-          />
-        ))}
-      </div>
-
-      <div style={{marginTop:12, padding:10, border:'1px solid #eee', borderRadius:6, background:'#fafafa'}}>
-        <div><strong>Status:</strong> {status} <span style={{marginLeft:12}}><strong>Listening:</strong> {String(isListening)}</span></div>
-        <div style={{marginTop:6}}><strong>Retry attempts:</strong> {retryCount} <span style={{marginLeft:12}}><strong>Last retry:</strong> {lastRetryAt ? new Date(lastRetryAt).toLocaleString() : '—'}</span></div>
-      </div>
-
-      
-      {triggered && (
-        <div style={{
-          marginTop: '30px',
-          padding: '40px',
-          backgroundColor: '#ff0000',
-          color: '#fff',
-          fontSize: '48px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          borderRadius: '10px'
-        }}>
-          DETECTED
-          <div style={{fontSize: '20px', marginTop: '10px', fontWeight: 'normal'}}>
-            {detectedText || keyword}
+    <div className="monitor-container">
+      <div className="monitor-main">
+        {/* Keyword Setup */}
+        <div className="card keyword-card">
+          <h2 className="card-title">Threat Detection Setup</h2>
+          <div className="input-group">
+            <label>Trigger Keyword</label>
+            <input
+              type="text"
+              placeholder="Enter keyword to detect..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="input-field"
+            />
           </div>
-          <div style={{fontSize: '18px', marginTop: '20px', fontWeight: 'normal'}}>
-            Alerting contacts: {contacts.filter(c => c).join(', ') || 'No contacts set'}
-          </div>
-          <div style={{fontSize: '18px', marginTop: '10px', fontWeight: 'normal'}}>
-            Alerted the police
+          <button 
+            onClick={toggleListening} 
+            className={`btn btn-primary ${isListening ? 'btn-active' : ''}`}
+          >
+            <span className="status-indicator"></span>
+            {isListening ? 'Stop Listening' : 'Start Listening'}
+          </button>
+        </div>
+
+        {/* Emergency Contacts */}
+        <div className="card contacts-card">
+          <h2 className="card-title">Emergency Contacts</h2>
+          <div className="contacts-grid">
+            {contacts.map((contact, index) => (
+              <div key={index} className="contact-input-wrapper">
+                <label>Contact {index + 1}</label>
+                <input
+                  type="text"
+                  placeholder="Name or phone number"
+                  value={contact}
+                  onChange={(e) => {
+                    const newContacts = [...contacts];
+                    newContacts[index] = e.target.value;
+                    setContacts(newContacts);
+                  }}
+                  className="input-field"
+                />
+              </div>
+            ))}
           </div>
         </div>
-      )}
-      {errorMsg && (
-        <div style={{marginTop:20, color:'#a00'}}>
-          <div><strong>Error:</strong> {errorMsg}</div>
-          <div style={{marginTop:8}}>
-            <button onClick={manualRetry} style={{padding:'8px 12px'}}>Retry Listening</button>
-            <span style={{marginLeft:12, color:'#666'}}>Attempts: {retryCount}</span>
-            {(errorType === 'not-allowed' || errorType === 'permission-denied' || errorType === 'service-not-allowed') && (
-              <button onClick={requestMicrophoneAccess} style={{padding:'8px 12px', marginLeft:12}}>Request Microphone Permission</button>
-            )}
-          </div>
-          {errorDetails && (
-            <pre style={{marginTop:12, whiteSpace:'pre-wrap', color:'#300', background:'#f7f7f7', padding:8, borderRadius:4, maxHeight:200, overflow:'auto'}}>
-              {errorDetails}
-            </pre>
-          )}
-        </div>
-      )}
 
+        {/* Status Card */}
+        <div className="card status-card">
+          <h2 className="card-title">System Status</h2>
+          <div className="status-grid">
+            <div className="status-item">
+              <div className="status-label">Status</div>
+              <div className={`status-value status-${status}`}>{status}</div>
+            </div>
+            <div className="status-item">
+              <div className="status-label">Listening</div>
+              <div className={`status-value ${isListening ? 'active' : 'inactive'}`}>
+                {isListening ? 'Active' : 'Inactive'}
+              </div>
+            </div>
+            <div className="status-item">
+              <div className="status-label">Retry Attempts</div>
+              <div className="status-value">{retryCount}</div>
+            </div>
+            <div className="status-item">
+              <div className="status-label">Last Update</div>
+              <div className="status-value">{lastRetryAt ? new Date(lastRetryAt).toLocaleTimeString() : '—'}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detection Alert */}
+        {triggered && (
+          <div className="alert alert-danger">
+            <div className="alert-header">
+              <div className="alert-icon">!</div>
+              <div className="alert-title">THREAT DETECTED</div>
+            </div>
+            <div className="alert-content">
+              <p><strong>Keyword:</strong> {detectedText || keyword}</p>
+              <p><strong>Contacts Alerted:</strong> {contacts.filter(c => c).length > 0 ? contacts.filter(c => c).join(', ') : 'No contacts configured'}</p>
+              <p><strong>Emergency Services:</strong> Police dispatched</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error Alert */}
+        {errorMsg && (
+          <div className="alert alert-warning">
+            <div className="alert-header">
+              <div className="alert-icon">⚠</div>
+              <div className="alert-title">Error</div>
+            </div>
+            <div className="alert-content">
+              <p>{errorMsg}</p>
+              <div className="alert-actions">
+                <button onClick={manualRetry} className="btn btn-secondary btn-sm">Retry</button>
+                <span className="retry-count">Attempts: {retryCount}</span>
+                {(errorType === 'not-allowed' || errorType === 'permission-denied' || errorType === 'service-not-allowed') && (
+                  <button onClick={requestMicrophoneAccess} className="btn btn-secondary btn-sm">Request Permission</button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
