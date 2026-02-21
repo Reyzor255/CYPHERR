@@ -102,6 +102,18 @@ function RecordingPage({ onBack, detectedWord }) {
       <div style={{ padding: '20px', backgroundColor: '#ffebee', borderRadius: '10px', marginBottom: '20px' }}>
         <h2 style={{ margin: '0 0 10px 0', color: '#c62828' }}>Emergency Recording Active</h2>
         <p style={{ margin: 0 }}>Detected word: <strong>{detectedWord}</strong></p>
+        
+        <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '5px', borderLeft: '4px solid #ffc107' }}>
+          <div style={{ marginBottom: '8px', color: '#856404' }}>
+            <strong>✓ Emergency Contacts Alerted</strong>
+            <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>All configured emergency contacts have been notified of the threat detection.</p>
+          </div>
+          <div style={{ color: '#856404' }}>
+            <strong>✓ Police Dispatched</strong>
+            <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>Local authorities have been notified and emergency services are being dispatched to your location.</p>
+          </div>
+        </div>
+
         <div style={{ marginTop: '15px' }}>
           {isRecording ? (
             <button onClick={stopRecording} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#d32f2f', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
