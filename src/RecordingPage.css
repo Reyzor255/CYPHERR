@@ -32,12 +32,35 @@
   border-radius: 16px;
   padding: 32px;
   border: 2px solid;
-  animation: slideIn 0.3s ease;
+  animation: slideIn 0.3s ease, pulse-alert 2s infinite;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.alert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--error-red), transparent);
+  opacity: 0.3;
 }
 
 .alert-emergency {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(236, 72, 153, 0.05) 100%);
   border-color: var(--error-red);
+}
+
+@keyframes pulse-alert {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.15);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.25);
+  }
 }
 
 .alert-card .alert-header {
@@ -80,8 +103,41 @@
 /* Confirmation Card */
 .confirmation-card {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
+}
+
+.confirmation-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirmation-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--success-green), transparent);
+  opacity: 0.3;
+}
+
+.confirmation-item.confirmed {
+  border-color: var(--success-green);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.03) 100%);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.08);
+}
+
+.confirmation-item.confirmed:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12);
 }
 
 .confirmation-item {
@@ -245,15 +301,34 @@
 }
 
 .recording-item {
-  background: rgba(236, 72, 153, 0.05);
+  padding: 20px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 16px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.recording-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
+  opacity: 0.2;
+}
+
+.recording-item:hover {
+  border-color: var(--primary-pink);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.08);
 }
 
 .recording-item:hover {

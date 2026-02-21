@@ -30,34 +30,112 @@ body {
 }
 
 .app-header {
-  background: linear-gradient(135deg, var(--primary-pink) 0%, #be185d 100%);
-  padding: 40px 20px;
+  background: linear-gradient(135deg, var(--primary-pink) 0%, #be185d 50%, #831843 100%);
+  padding: 60px 20px;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(236, 72, 153, 0.15);
+  box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .header-content h1 {
-  font-size: 48px;
-  font-weight: 700;
-  margin: 16px 0 8px;
-  letter-spacing: -0.5px;
+  font-size: 56px;
+  font-weight: 900;
+  margin: 8px 0;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .header-content .subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 300;
+  margin: 12px 0 20px;
+  letter-spacing: 0.3px;
 }
 
 .logo {
   display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-badge {
   background: rgba(255, 255, 255, 0.15);
-  padding: 10px 16px;
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-features {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.feature-tag {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.95);
-  margin-bottom: 8px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.feature-tag:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
 }
