@@ -16,9 +16,6 @@ function SafetyMonitor() {
   const [contacts, setContacts] = useState(['', '', '']);
   const [showRecordingPage, setShowRecordingPage] = useState(false);
   const requestIdRef = useRef(0);
-  const [envInfo, setEnvInfo] = useState(null);
-  const [gUMStatus, setGUMStatus] = useState('idle');
-  const [fetchStatus, setFetchStatus] = useState('idle');
   const recognitionRef = useRef(null);
   const keywordRef = useRef(keyword);
   const listeningRef = useRef(isListening);
@@ -206,48 +203,7 @@ function SafetyMonitor() {
     }
   };
 
-  const collectEnv = () => {
-    const info = {
-      online: Boolean(navigator.onLine),
-      userAgent: navigator.userAgent,
-      connection: (navigator.connection && navigator.connection.effectiveType) || 'unknown',
-      platform: navigator.platform || 'unknown'
-    };
-    setEnvInfo(info);
-    pushLog('collected env info');
-    return info;
-  };
 
-  const testGetUserMedia = async () => {
-    setGUMStatus('pending');
-    pushLog('running getUserMedia test');
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setGUMStatus('getUserMedia not supported');
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((t) => t.stop());
-      setGUMStatus('ok');
-      pushLog('getUserMedia ok');
-    } catch (err) {
-      setGUMStatus(String(err));
-      pushLog(`getUserMedia error: ${String(err)}`);
-    }
-  };
-
-  const testFetch = async (url = 'https://www.google.com') => {
-    setFetchStatus('pending');
-    pushLog(`running fetch test to ${url}`);
-    try {
-      await fetch(url, { mode: 'no-cors' });
-      setFetchStatus('ok');
-      pushLog('fetch ok');
-    } catch (err) {
-      setFetchStatus(String(err));
-      pushLog(`fetch error: ${String(err)}`);
-    }
-  };
 
   if (showRecordingPage) {
     return <RecordingPage onBack={() => setShowRecordingPage(false)} detectedWord={keyword} />;
@@ -288,17 +244,7 @@ function SafetyMonitor() {
         <div><strong>Status:</strong> {status} <span style={{marginLeft:12}}><strong>Listening:</strong> {String(isListening)}</span></div>
         <div style={{marginTop:6}}><strong>Retry attempts:</strong> {retryCount} <span style={{marginLeft:12}}><strong>Last retry:</strong> {lastRetryAt ? new Date(lastRetryAt).toLocaleString() : '—'}</span></div>
       </div>
-      <div style={{marginTop:12, padding:10, border:'1px solid #eee', borderRadius:6, background:'#fff'}}>
-        <div style={{display:'flex', gap:8, alignItems:'center'}}>
-          <button onClick={() => { const i = collectEnv(); setEnvInfo(i); }} style={{padding:'6px 10px'}}>Collect Env</button>
-          <button onClick={() => testGetUserMedia()} style={{padding:'6px 10px'}}>Test getUserMedia</button>
-          <button onClick={() => testFetch()} style={{padding:'6px 10px'}}>Test Fetch</button>
-        </div>
-        <div style={{marginTop:8}}>
-          <div><strong>Online:</strong> {envInfo ? String(envInfo.online) : '—' } <strong style={{marginLeft:12}}>UA:</strong> {envInfo ? envInfo.userAgent.split(') ')[0] + ')' : '—'}</div>
-          <div style={{marginTop:6}}><strong>Connection:</strong> {envInfo ? envInfo.connection : '—'} <strong style={{marginLeft:12}}>GUM:</strong> {gUMStatus} <strong style={{marginLeft:12}}>Fetch:</strong> {fetchStatus}</div>
-        </div>
-      </div>
+
       
       {triggered && (
         <div style={{
